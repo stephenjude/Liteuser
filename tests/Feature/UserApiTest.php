@@ -12,7 +12,7 @@ class UserApiTest extends TestCase
 
     public function test_get_user_list()
     {
-        $users = User::factory()->create();
+        User::factory()->count(2)->create();
 
         $this->response = $this->getJson('api/users');
 
@@ -20,15 +20,15 @@ class UserApiTest extends TestCase
 
         $this->assertApiSuccess();
 
-        $this->assertApiResponseCollection($users);
+        $this->assertApiResponseCollection(User::all(['id', 'name', 'email']));
     }
 
 
     public function test_get_user_by_id()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create()->only(['id', 'name', 'email']);
 
-        $this->response = $this->getJson('api/users/'.$user->id);
+        $this->response = $this->getJson('api/users/'.$user['id']);
 
         $this->response->assertOk();
 
